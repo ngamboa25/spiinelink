@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // Ensure you have a login_page.dart in your lib folder with a LoginPage widget
+import 'login_page.dart'; // Ensure this file is set up correctly and exists.
 
 void main() {
   runApp(const MyApp());
@@ -13,130 +13,145 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue[300], // Logo color
-          title: Image.asset('assets/logo.png', height: 50),
+          backgroundColor: Colors.blue[300], // Assumed logo color
+          title: Image.asset('assets/logo.png', height: 50), // Ensure your asset path is correct
         ),
         body: Row(
           children: [
             Expanded(
-              flex: 3, // Slightly reduced flex to better fit web
+              flex: 3,
               child: Container(
                 color: Colors.grey[200],
                 child: Column(
                   children: [
-                    const SizedBox(height: 20),
-                    const CircleAvatar(
-                      radius: 40, // Reduced size for aesthetics
-                      backgroundColor: Colors.grey,
-                      child: Icon(Icons.person, size: 40),
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      color: Colors.blue[100],
-                      child: const Text('Dr. Seungmin', style: TextStyle(fontSize: 16)),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue[300]!, width: 1),
-                        borderRadius: BorderRadius.circular(10),
+                    Expanded(
+                      child: Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.grey,
+                          child: Icon(Icons.person, size: 60),
+                        ),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      color: Colors.blue[100],
-                      child: const Text('Cédula', style: TextStyle(fontSize: 16)),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue[300]!, width: 1),
-                        borderRadius: BorderRadius.circular(10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0), // 1 cm vertical separation approx
+                      child: buildInfoBox('Dr. Seungmin', Colors.blue[100]!),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: buildInfoBox('Cédula', Colors.blue[100]!),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: buildInfoBox('Hospital', Colors.blue[100]!),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[100],
+                          foregroundColor: Colors.black,
+                        ),
+                        icon: Icon(Icons.settings),
+                        label: Text('Editar Perfil', style: TextStyle(fontSize: 16)),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      color: Colors.blue[100],
-                      child: const Text('Hospital', style: TextStyle(fontSize: 16)),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue[300]!, width: 1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[100],
-                        foregroundColor: Colors.black,
-                      ),
-                      icon: const Icon(Icons.settings),
-                      label: const Text('Editar Perfil'),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        // Navigating to the LoginPage when "Cerrar Sesión" is clicked
-                        Navigator.push(
+                    buildTextButton('Ayuda'),
+                    buildTextButton('Términos y Condiciones'),
+                    buildTextButton('Aviso de Privacidad'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: TextButton(
+                        onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const LoginPage()),
-                        );
-                      },
-                      child: const Text('Cerrar Sesión', style: TextStyle(color: Colors.red)),
+                        ),
+                        child: Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            Expanded(
-              flex: 5,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.lightBlue[100],
-                            foregroundColor: Colors.black,
-                          ),
-                          child: const Text('Añadir'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.lightBlue[100],
-                            foregroundColor: Colors.black,
-                          ),
-                          child: const Text('Editar'),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Buscar',
-                              suffixIcon: Icon(Icons.search),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: 8,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (_, index) => ListTile(
-                        title: Text('Paciente ${index + 1}'),
-                        trailing: const Icon(Icons.more_vert),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            buildPatientListSection(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildInfoBox(String text, Color backgroundColor) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        border: Border.all(color: Colors.blue[300]!, width: 1),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Center(child: Text(text, style: TextStyle(fontSize: 18))),
+    );
+  }
+
+  Widget buildTextButton(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: TextButton(
+        onPressed: () {},
+        child: Text(text, style: TextStyle(fontSize: 16)),
+      ),
+    );
+  }
+
+  Widget buildPatientListSection() {
+    return Expanded(
+      flex: 5,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue[100],
+                    foregroundColor: Colors.black,
+                  ),
+                  child: const Text('Añadir'),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue[100],
+                    foregroundColor: Colors.black,
+                  ),
+                  child: const Text('Editar'),
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Buscar',
+                      suffixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.separated(
+              itemCount: 8,
+              separatorBuilder: (_, __) => const Divider(),
+              itemBuilder: (_, index) => ListTile(
+                title: Text('Paciente ${index + 1}'),
+                trailing: const Icon(Icons.more_vert),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
