@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart'; // Ensure this file is set up correctly and exists.
-import 'user_profile_page.dart'; // Import the user profile page.
+import 'User_Profile_Page.dart'; // Import the UserProfilePage.
 
 void main() {
   runApp(MyApp());
@@ -10,18 +10,33 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Homescreen(),
+      debugShowCheckedModeBanner: false,
+      title: 'My Application', // Optional: Change this to your application's name
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: HomeScreen(),
     );
   }
 }
 
-class Homescreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  String doctorName = 'Dr. Seungmin'; // Default value
+  String cedula = 'Cédula Initial';   // Default value
+  String hospital = 'Hospital Initial'; // Default value
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue[300], // This color is assumed from your description
-        title: Image.asset('assets/logo.png', height: 50), // Ensure your asset path is correct
+        backgroundColor: Colors.blue[300],
+        title: Image.asset('assets/logo.png', height: 50),
       ),
       body: Row(
         children: [
@@ -41,25 +56,32 @@ class Homescreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0), // 1 cm vertical separation approx
-                    child: buildInfoBox('Dr. Seungmin', Colors.blue[100]!),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: buildInfoBox(doctorName, Colors.blue[100]!),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: buildInfoBox('Cédula', Colors.blue[100]!),
+                    child: buildInfoBox(cedula, Colors.blue[100]!),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: buildInfoBox('Hospital', Colors.blue[100]!),
+                    child: buildInfoBox(hospital, Colors.blue[100]!),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        final result = await Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const UserProfilePage()),
                         );
+                        if (result != null) {
+                          setState(() {
+                            doctorName = result['userName'];
+                            cedula = result['userCedula'];
+                            hospital = result['hospitalName'];
+                          });
+                        }
                       },
                       icon: const Icon(Icons.settings),
                       label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
@@ -69,7 +91,7 @@ class Homescreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Spacer(), // Correctly placed Spacer to push the content below to the bottom
+                  const Spacer(),
                   buildTextButton('Ayuda'),
                   buildTextButton('Términos y Condiciones'),
                   buildTextButton('Aviso de Privacidad'),
