@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart'; // Ensure this file is set up correctly and exists.
+import 'user_profile_page.dart'; // Import the user profile page.
 
 void main() {
   runApp(MyApp());
@@ -8,84 +9,88 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        home: new Homescreen ());
+    return MaterialApp(
+      home: Homescreen(),
+    );
   }
 }
 
 class Homescreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.blue[300], // This color is assumed from your description
-          title: Image.asset('assets/logo.png', height: 50), // Ensure your asset path is correct
-        ),
-        body: Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                color: Colors.grey[200],
-                child: Column(
-                  children: [
-                    const Expanded(
-                      child: Center(
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.grey,
-                          child: Icon(Icons.person, size: 60),
-                        ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue[300], // This color is assumed from your description
+        title: Image.asset('assets/logo.png', height: 50), // Ensure your asset path is correct
+      ),
+      body: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Container(
+              color: Colors.grey[200],
+              child: Column(
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey,
+                        child: Icon(Icons.person, size: 60),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0), // 1 cm vertical separation approx
-                      child: buildInfoBox('Dr. Seungmin', Colors.blue[100]!),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: buildInfoBox('Cédula', Colors.blue[100]!),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: buildInfoBox('Hospital', Colors.blue[100]!),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[100],
-                          foregroundColor: Colors.black,
-                        ),
-                        icon: const Icon(Icons.settings),
-                        label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0), // 1 cm vertical separation approx
+                    child: buildInfoBox('Dr. Seungmin', Colors.blue[100]!),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: buildInfoBox('Cédula', Colors.blue[100]!),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: buildInfoBox('Hospital', Colors.blue[100]!),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const UserProfilePage()),
+                        );
+                      },
+                      icon: const Icon(Icons.settings),
+                      label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[100],
+                        foregroundColor: Colors.black,
                       ),
                     ),
-                    const Spacer(),
-                    buildTextButton('Ayuda'),
-                    buildTextButton('Términos y Condiciones'),
-                    buildTextButton('Aviso de Privacidad'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: ElevatedButton( // Using Builder to provide a valid context for Navigator
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                new MaterialPageRoute(builder: (context) => new LoginPage())
-                              );
-                            },
-                            child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
-                      ),
+                  ),
+                  const Spacer(), // Correctly placed Spacer to push the content below to the bottom
+                  buildTextButton('Ayuda'),
+                  buildTextButton('Términos y Condiciones'),
+                  buildTextButton('Aviso de Privacidad'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                        );
+                      },
+                      child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            buildPatientListSection(),
-          ],
-        ),
+          ),
+          buildPatientListSection(),
+        ],
       ),
     );
   }
