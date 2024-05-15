@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:faker/faker.dart';
 import 'login_page.dart'; // Ensure this file is set up correctly and exists.
 import 'User_Profile_Page.dart'; // Import the UserProfilePage.
+import 'Patient_Profile_Page.dart'; // Make sure this page exists and is correctly set up.
 
 void main() {
   runApp(MyApp());
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'My Application', // Optional: Change this to your application's name
+      title: 'My Application',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -30,6 +32,14 @@ class HomeScreenState extends State<HomeScreen> {
   String doctorName = 'Dr. Seungmin'; // Default value
   String cedula = 'Cédula Initial';   // Default value
   String hospital = 'Hospital Initial'; // Default value
+  List<String> patientNames = [];
+
+  @override
+  void initState() {
+    super.initState();
+    Faker faker = Faker();
+    patientNames = List.generate(9, (_) => faker.person.name());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,12 +188,19 @@ class HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              itemCount: 8,
-              separatorBuilder: (_, __) => const Divider(),
+            child: ListView.builder(
+              itemCount: patientNames.length,
               itemBuilder: (_, index) => ListTile(
-                title: Text('Paciente ${index + 1}'),
-                trailing: const Icon(Icons.more_vert),
+                title: Text(patientNames[index]),
+                trailing: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PatientProfilePage(name: patientNames[index])),
+                    );
+                  },
+                ),
               ),
             ),
           ),
