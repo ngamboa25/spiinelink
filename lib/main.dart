@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
-import 'login_page.dart'; // Ensure this file is set up correctly and exists.
-import 'User_Profile_Page.dart'; // Import the UserProfilePage.
-import 'Patient_Profile_Page.dart'; // Make sure this page exists and is correctly set up.
+import 'login_page.dart'; // Ensure this file is correctly set up and exists.
+import 'user_profile_page.dart'; // Import the UserProfilePage.
+import 'patient_profile_page.dart'; // Ensure this page exists and is set up correctly.
 
 void main() {
   runApp(MyApp());
@@ -29,16 +29,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  String doctorName = 'Dr. Seungmin'; // Default value
-  String cedula = 'Cédula Initial';   // Default value
-  String hospital = 'Hospital Initial'; // Default value
-  List<String> patientNames = [];
+  String doctorName = 'Nombre de Personal de Salud'; // Default value
+  String cedula = 'Cédula';   // Default value
+  String hospital = 'Nombre de la institución'; // Default value
+  List<Map<String, String>> patientData = []; // Will store patient data
+  String searchQuery = ''; // Declare searchQuery variable
 
   @override
   void initState() {
     super.initState();
     Faker faker = Faker();
-    patientNames = List.generate(9, (_) => faker.person.name());
+    patientData = List.generate(9, (index) => {
+      'name': faker.person.name(),
+      'id': faker.guid.guid(),
+    });
   }
 
   @override
@@ -50,78 +54,159 @@ class HomeScreenState extends State<HomeScreen> {
       ),
       body: Row(
         children: [
+          buildSidePanel(context),
+          buildPatientListSection(context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSidePanel(BuildContext context) {
+    return Expanded(
+      flex: 3,
+      child: Container(
+        color: Colors.grey[200],
+        child: Column(
+          children: [
+            const Expanded(
+              child: Center(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, size: 60),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: buildInfoBox(doctorName, Colors.blue[100]!),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: buildInfoBox(cedula, Colors.blue[100]!),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: buildInfoBox(hospital, Colors.blue[100]!),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const UserProfilePage()),
+                  );
+                  if (result != null) {
+                    setState(() {
+                      doctorName = result['userName'];
+                      cedula = result['userCedula'];
+                      hospital = result['hospitalName'];
+                    });
+                  }
+                },
+                icon: const Icon(Icons.settings),
+                label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[100],
+                  foregroundColor: Colors.black,
+                ),
+              ),
+            ),
+            const Spacer(),
+            buildTextButton('Ayuda'),
+            buildTextButton('Términos y Condiciones'),
+            buildTextButton('Aviso de Privacidad'),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildPatientListSection(BuildContext context) {
+    return Expanded(
+      flex: 5,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () {}, // Add functionality for "Añadir"
+                  child: const Text('Añadir'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.lightBlue[100],
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {}, // Add functionality for "Editar"
+                  child: const Text('Editar'),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.lightBlue[100],
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Buscar',
+                      suffixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value.toLowerCase();
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
-            flex: 3,
-            child: Container(
-              color: Colors.grey[200],
-              child: Column(
-                children: [
-                  const Expanded(
-                    child: Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey,
-                        child: Icon(Icons.person, size: 60),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: buildInfoBox(doctorName, Colors.blue[100]!),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: buildInfoBox(cedula, Colors.blue[100]!),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: buildInfoBox(hospital, Colors.blue[100]!),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const UserProfilePage()),
-                        );
-                        if (result != null) {
-                          setState(() {
-                            doctorName = result['userName'];
-                            cedula = result['userCedula'];
-                            hospital = result['hospitalName'];
-                          });
-                        }
-                      },
-                      icon: const Icon(Icons.settings),
-                      label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue[100],
-                        foregroundColor: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  buildTextButton('Ayuda'),
-                  buildTextButton('Términos y Condiciones'),
-                  buildTextButton('Aviso de Privacidad'),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ElevatedButton(
+            child: ListView.builder(
+              itemCount: patientData.length,
+              itemBuilder: (_, index) {
+                final patient = patientData[index];
+                if (patient['name']!.toLowerCase().contains(searchQuery)) {
+                  return ListTile(
+                    title: Text(patient['name']!),
+                    subtitle: Text('ID: ${patient['id']}'),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.search),
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                          MaterialPageRoute(
+                            builder: (context) => PatientProfilePage(
+                              name: patient['name']!,
+                              patientId: patient['id']!,
+                              hospitalName: hospital,
+                            ),
+                          ),
                         );
                       },
-                      child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
                     ),
-                  ),
-                ],
-              ),
+                  );
+                }
+                return Container(); // Return empty container for non-matching items
+              },
             ),
           ),
-          buildPatientListSection(),
         ],
       ),
     );
@@ -145,66 +230,6 @@ class HomeScreenState extends State<HomeScreen> {
       child: TextButton(
         onPressed: () {},
         child: Text(text, style: const TextStyle(fontSize: 16)),
-      ),
-    );
-  }
-
-  Widget buildPatientListSection() {
-    return Expanded(
-      flex: 5,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue[100],
-                    foregroundColor: Colors.black,
-                  ),
-                  child: const Text('Añadir'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.lightBlue[100],
-                    foregroundColor: Colors.black,
-                  ),
-                  child: const Text('Editar'),
-                ),
-                const Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Buscar',
-                      suffixIcon: Icon(Icons.search),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: patientNames.length,
-              itemBuilder: (_, index) => ListTile(
-                title: Text(patientNames[index]),
-                trailing: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PatientProfilePage(name: patientNames[index])),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
