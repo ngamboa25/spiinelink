@@ -8,7 +8,15 @@ class PatientProfileEdit extends StatefulWidget {
   final String consultationReason;
   final String diagnosis;
 
-  const PatientProfileEdit({Key? key, required this.name, required this.patientId, required this.hospitalName, required this.clinicalHistory, required this.consultationReason, required this.diagnosis}) : super(key: key);
+  const PatientProfileEdit({
+    Key? key,
+    required this.name,
+    required this.patientId,
+    required this.hospitalName,
+    required this.clinicalHistory,
+    required this.consultationReason,
+    required this.diagnosis,
+  }) : super(key: key);
 
   @override
   PatientProfileEditState createState() => PatientProfileEditState();
@@ -50,7 +58,7 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
             buildTextField('Historial Clínico', clinicalHistoryController),
             buildTextField('Motivo de Consulta', consultationReasonController),
             buildTextField('Diagnóstico', diagnosisController),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _saveAndExit,
               child: const Text('Guardar Cambios'),
@@ -68,7 +76,7 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
       ),
     );

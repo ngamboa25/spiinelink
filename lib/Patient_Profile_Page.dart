@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'patient_profile_edit.dart';
 import 'calculadora_pag.dart';
-import 'image_analysis_page.dart';  // Ensure this file is correctly set up for image analysis.
+import 'image_analysis_page.dart';
 
 class PatientProfilePage extends StatefulWidget {
   final String name;
@@ -21,7 +21,8 @@ class PatientProfilePageState extends State<PatientProfilePage> {
   String clinicalHistory = '';
   String consultationReason = '';
   String diagnosis = '';
-  String imageNotes = '';  // This holds the notes for images, initialized as empty.
+  String imageNotes1 = '';  // Holds the notes for the first image.
+  String imageNotes2 = '';  // Holds the notes for the second image.
 
   @override
   void initState() {
@@ -53,20 +54,20 @@ class PatientProfilePageState extends State<PatientProfilePage> {
     return Container(
       width: 200,
       padding: const EdgeInsets.all(10),
-      color: Colors.lightBlue[50],  // Added light blue color as requested
+      color: Colors.lightBlue[50],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(radius: 50, backgroundImage: AssetImage('assets/patient_icon.png')), // Placeholder image
+          const CircleAvatar(radius: 50, backgroundImage: AssetImage('assets/patient_icon.png')),
           const SizedBox(height: 20),
-          Text('Nombre: $name', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-          Text('ID: $patientId', style: TextStyle(fontSize: 16)),
-          Text('Hospital: $hospitalName', style: TextStyle(fontSize: 16)),
+          Text('Nombre: $name', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          Text('ID: $patientId', style: const TextStyle(fontSize: 16)),
+          Text('Hospital: $hospitalName', style: const TextStyle(fontSize: 16)),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: () => navigateToEditProfile(context), child: Text('Editar Perfil')),
+          ElevatedButton(onPressed: () => navigateToEditProfile(context), child: const Text('Editar Perfil')),
           ElevatedButton(onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => CalculadoraPag()));
-          }, child: Text('Calculadora')),
+          }, child: const Text('Calculadora')),
         ],
       ),
     );
@@ -88,7 +89,7 @@ class PatientProfilePageState extends State<PatientProfilePage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => navigateToImageAnalysis(context),
-                child: Text('Análisis de Imágenes'),
+                child: const Text('Análisis de Imágenes'),
               ),
             ],
           ),
@@ -100,7 +101,7 @@ class PatientProfilePageState extends State<PatientProfilePage> {
   Widget buildTextField(String label, String value, Function(String) onChange) {
     return TextField(
       controller: TextEditingController(text: value),
-      decoration: InputDecoration(labelText: label, border: OutlineInputBorder()),
+      decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
       onChanged: onChange,
       maxLines: 3,
     );
@@ -129,18 +130,19 @@ class PatientProfilePageState extends State<PatientProfilePage> {
     }
   }
 
-  void navigateToImageAnalysis(BuildContext context) async {
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ImageAnalysisPage(imageNotes: imageNotes)  // Assuming 'ImageAnalysisPage' requires 'imageNotes' parameter
-      )
-    );
+void navigateToImageAnalysis(BuildContext context) async {
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ImageAnalysisPage(imageNotes1: imageNotes1, imageNotes2: imageNotes2)
+    )
+  );
 
-    if (result != null) {
-      setState(() {
-        imageNotes = result['imageNotes'];
-      });
-    }
+  if (result != null) {
+    setState(() {
+      imageNotes1 = result['imageNotes1'] ?? imageNotes1;
+      imageNotes2 = result['imageNotes2'] ?? imageNotes2;
+    });
   }
+}
 }

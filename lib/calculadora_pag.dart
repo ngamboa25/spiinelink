@@ -6,9 +6,9 @@ class CalculadoraPag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Calculadora'),
+        title: const Text('Calculadora'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Aquí iría la funcionalidad de la calculadora.'),
       ),
     );

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
-import 'login_page.dart'; // Ensure this file is correctly set up and exists.
-import 'user_profile_page.dart'; // Import the UserProfilePage.
-import 'patient_profile_page.dart'; // Ensure this page exists and is set up correctly.
+import 'login_page.dart';  // Ensure this file is correctly set up and exists.
+import 'user_profile_page.dart';  // Import the UserProfilePage.
+import 'patient_profile_page.dart';  // Ensure this page exists and is set up correctly.
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  final String doctorName;
+  final String cedula;
+  final String hospital;
+
+  MyApp({Key? key, this.doctorName = 'Nombre de Personal de Salud', this.cedula = 'Cédula', this.hospital = 'Nombre de la institución'}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,22 +24,25 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: HomeScreen(doctorName: doctorName, cedula: cedula, hospital: hospital),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
+  final String doctorName;
+  final String cedula;
+  final String hospital;
+
+  HomeScreen({Key? key, required this.doctorName, required this.cedula, required this.hospital}) : super(key: key);
+
   @override
   HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  String doctorName = 'Nombre de Personal de Salud'; // Default value
-  String cedula = 'Cédula';   // Default value
-  String hospital = 'Nombre de la institución'; // Default value
-  List<Map<String, String>> patientData = []; // Will store patient data
-  String searchQuery = ''; // Declare searchQuery variable
+  List<Map<String, String>> patientData = [];  // Will store patient data
+  String searchQuery = '';  // Declare searchQuery variable
 
   @override
   void initState() {
@@ -79,15 +88,15 @@ class HomeScreenState extends State<HomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: buildInfoBox(doctorName, Colors.blue[100]!),
+              child: buildInfoBox(widget.doctorName, Colors.blue[100]!),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: buildInfoBox(cedula, Colors.blue[100]!),
+              child: buildInfoBox(widget.cedula, Colors.blue[100]!),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: buildInfoBox(hospital, Colors.blue[100]!),
+              child: buildInfoBox(widget.hospital, Colors.blue[100]!),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -95,13 +104,11 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () async {
                   final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const UserProfilePage()),
+                    MaterialPageRoute(builder: (context) => UserProfilePage()),
                   );
                   if (result != null) {
                     setState(() {
-                      doctorName = result['userName'];
-                      cedula = result['userCedula'];
-                      hospital = result['hospitalName'];
+                      // Assuming UserProfilePage returns data in a Map
                     });
                   }
                 },
@@ -123,7 +130,7 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
                 child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
@@ -163,7 +170,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
                 Expanded(
                   child: TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Buscar',
                       suffixIcon: Icon(Icons.search),
                     ),
@@ -195,7 +202,7 @@ class HomeScreenState extends State<HomeScreen> {
                             builder: (context) => PatientProfilePage(
                               name: patient['name']!,
                               patientId: patient['id']!,
-                              hospitalName: hospital,
+                              hospitalName: widget.hospital,
                             ),
                           ),
                         );
