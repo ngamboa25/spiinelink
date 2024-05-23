@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   final String cedula;
   final String hospital;
 
-  MyApp({Key? key, this.doctorName = 'Nombre de Personal de Salud', this.cedula = 'Cédula', this.hospital = 'Nombre de la institución'}) : super(key: key);
+  MyApp({Key? key, this.doctorName = 'Guadalupe Espinosa López', this.cedula = 'ABCD800724MDFRRR00', this.hospital = 'Centro Médico de Occidente'}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Faker faker = Faker();
-    patientData = List.generate(9, (index) => {
+    patientData = List.generate(4, (index) => {
       'name': faker.person.name(),
       'id': faker.guid.guid(),
     });
