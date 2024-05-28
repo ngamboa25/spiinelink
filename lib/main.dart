@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:faker/faker.dart';
-import 'login_page.dart';  // Ensure this file is correctly set up and exists.
-import 'user_profile_page.dart';  // Import the UserProfilePage.
-import 'patient_profile_page.dart';  // Ensure this page exists and is set up correctly.
+import 'login_page.dart';
+import 'patient_profile_page.dart';
+import 'user_profile_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   final String cedula;
   final String hospital;
 
-  MyApp({Key? key, this.doctorName = 'Guadalupe Espinosa López', this.cedula = 'ABCD800724MDFRRR00', this.hospital = 'Centro Médico de Occidente'}) : super(key: key);
+  const MyApp({Key? key, this.doctorName = 'Guadalupe Espinosa López', this.cedula = 'ABCD800724MDFRRR00', this.hospital = 'Centro Médico de Occidente'}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +41,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  List<Map<String, String>> patientData = [];  // Will store patient data
-  String searchQuery = '';  // Declare searchQuery variable
+  List<Map<String, String>> patientData = [];
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[300],
-        title: Image.asset('assets/logo.png', height: 50),
+        title: Image.asset('assets/SPINELINK_Vec.png', height: 50),
       ),
       body: Row(
         children: [
@@ -104,12 +104,10 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () async {
                   final result = await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UserProfilePage()),
+                    MaterialPageRoute(builder: (context) => const UserProfilePage()),
                   );
                   if (result != null) {
-                    setState(() {
-                      // Assuming UserProfilePage returns data in a Map
-                    });
+                    setState(() {});
                   }
                 },
                 icon: const Icon(Icons.settings),
@@ -153,7 +151,9 @@ class HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () {}, // Add functionality for "Añadir"
+                  onPressed: () {
+                    _showAddPatientDialog(context);
+                  },
                   child: const Text('Añadir'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.lightBlue[100],
@@ -161,7 +161,7 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {}, // Add functionality for "Editar"
+                  onPressed: () {},
                   child: const Text('Editar'),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.lightBlue[100],
@@ -210,12 +210,65 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 }
-                return Container(); // Return empty container for non-matching items
+                return Container();
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _showAddPatientDialog(BuildContext context) {
+    TextEditingController nameController = TextEditingController();
+    TextEditingController idController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add New Patient'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: idController,
+                decoration: const InputDecoration(labelText: 'ID'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                var newName = nameController.text;
+                var newId = idController.text;
+                setState(() {
+                  patientData.add({
+                    'name': newName,
+                    'id': newId,
+                  });
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PatientProfilePage(
+                        name: newName,
+                        patientId: newId,
+                        hospitalName: widget.hospital,
+                      ),
+                    ),
+                  );
+                });
+              },
+              child: const Icon(Icons.check, color: Colors.green),
+            )
+          ],
+        );
+      },
     );
   }
 

@@ -61,6 +61,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
+    - assets/SPINELINK_Vec.png
     - assets/xray1.png
     - assets/xray2.png
   # To add assets to your application, add an assets section, like this:
