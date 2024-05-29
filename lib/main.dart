@@ -34,7 +34,7 @@ class HomeScreen extends StatefulWidget {
   final String cedula;
   final String hospital;
 
-  HomeScreen({Key? key, required this.doctorName, required this.cedula, required this.hospital}) : super(key: key);
+  const HomeScreen({Key? key, required this.doctorName, required this.cedula, required this.hospital}) : super(key: key);
 
   @override
   HomeScreenState createState() => HomeScreenState();
