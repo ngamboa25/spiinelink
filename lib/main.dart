@@ -3,7 +3,6 @@ import 'package:faker/faker.dart';
 import 'login_page.dart';
 import 'patient_profile_page.dart';
 import 'user_profile_page.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -128,7 +127,7 @@ class HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
                 child: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
