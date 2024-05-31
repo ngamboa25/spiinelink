@@ -16,11 +16,13 @@ class RegistrationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Padding(
+      body: Row(  // Use Row to create a side-by-side layout
+        children: [
+          // Registration Form Column
+          Expanded(
+            flex: 3,  // Adjusted to give more space to the form
+            child: SingleChildScrollView(
+              child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
@@ -30,8 +32,8 @@ class RegistrationPage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: Image.asset(
                         'assets/SPINELINK_Vec.png',
-                        width: 200,
-                        height: 150,
+                        width: 150,
+                        height: 100,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -95,25 +97,28 @@ class RegistrationPage extends StatelessWidget {
                   ],
                 ),
               ),
-              // Floating gradient container
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5, // Half the width of the screen
-                  margin: const EdgeInsets.only(top: 50, bottom: 50, right: 20),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [const Color(0xFF153866), Theme.of(context).colorScheme.secondary],
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+            ),
+          ),
+          // Decorative Gradient Container Column
+          Expanded(
+            flex: 2,  // Smaller flex value to reduce the size of the gradient box
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                width: 100,  // Explicit width
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF153866), Theme.of(context).colorScheme.secondary],
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
                   ),
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
