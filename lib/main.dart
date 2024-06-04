@@ -106,11 +106,17 @@ class HomeScreenState extends State<HomeScreen> {
                       width: 250,
                       height: 250,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
+                        color: Color(0xFFFFFFFF),
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: const Color(0xFF193A61),
                           width: 2,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/doc_icon.png', // Change this to your desired image path
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -211,78 +217,198 @@ class HomeScreenState extends State<HomeScreen> {
   Widget buildPatientListSection(BuildContext context) {
     return Expanded(
       flex: 5,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _showAddPatientDialog(context);
-                  },
-                  child: const Text('Añadir'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.lightBlue[100],
-                    backgroundColor: Colors.black,
-                  ),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
+              child: Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF193A61),
+                  borderRadius: BorderRadius.circular(18),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Editar'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.lightBlue[100],
-                    backgroundColor: Colors.black,
-                  ),
-                ),
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'Buscar',
-                      suffixIcon: Icon(Icons.search),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        searchQuery = value.toLowerCase();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: patientData.length,
-              itemBuilder: (_, index) {
-                final patient = patientData[index];
-                if (patient['name']!.toLowerCase().contains(searchQuery)) {
-                  return ListTile(
-                    title: Text(patient['name']!),
-                    subtitle: Text('ID: ${patient['id']}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PatientProfilePage(
-                              name: patient['name']!,
-                              patientId: patient['id']!,
-                              hospitalName: widget.hospital,
-                            ),
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 20, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                        child: Text(
+                          'Lista de Pacientes',
+                          style: TextStyle(
+                            fontFamily: 'Readex Pro',
+                            color: Colors.white,
+                            fontSize: 30,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
-                    ),
-                  );
-                }
-                return Container();
-              },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(120, 0, 0, 0),
+                        child: Container(
+                          width: 200,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                child: Icon(
+                                  Icons.add_circle,
+                                  color: Color(0xFF193A61),
+                                  size: 30,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    _showAddPatientDialog(context);
+                                  },
+                                  child: const Text(
+                                    'Añadir',
+                                    style: TextStyle(
+                                      fontFamily: 'Readex Pro',
+                                      color: Color(0xFF193A61),
+                                      fontSize: 20,
+                                      letterSpacing: 0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(30, 0, 0, 0),
+                        child: Container(
+                          width: 200,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Color(0xFF193A61),
+                                  size: 30,
+                                ),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  decoration: const InputDecoration(
+                                    hintText: 'Buscar',
+                                    border: InputBorder.none,
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      searchQuery = value.toLowerCase();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                itemCount: patientData.length,
+                itemBuilder: (_, index) {
+                  final patient = patientData[index];
+                  if (patient['name']!.toLowerCase().contains(searchQuery)) {
+                    return Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 9),
+                      child: Container(
+                        width: double.infinity,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFDDEDFF),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(15, 20, 0, 20),
+                              child: Text(
+                                patient['name']!,
+                                style: const TextStyle(
+                                  fontFamily: 'Readex Pro',
+                                  color: Color(0xFF193A61),
+                                  fontSize: 25,
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.search, color: Color(0xFF193A61)),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PatientProfilePage(
+                                            name: patient['name']!,
+                                            patientId: patient['id']!,
+                                            hospitalName: widget.hospital,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Text(
+                                    patient['id']!,
+                                    style: const TextStyle(
+                                      fontFamily: 'Readex Pro',
+                                      color: Color(0xFF193A61),
+                                      fontSize: 16,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

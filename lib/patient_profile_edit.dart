@@ -9,14 +9,14 @@ class PatientProfileEdit extends StatefulWidget {
   final String diagnosis;
 
   const PatientProfileEdit({
-    Key? key,
+    super.key,
     required this.name,
     required this.patientId,
     required this.hospitalName,
     required this.clinicalHistory,
     required this.consultationReason,
     required this.diagnosis,
-  }) : super(key: key);
+  });
 
   @override
   PatientProfileEditState createState() => PatientProfileEditState();
@@ -44,53 +44,69 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white, // Background color
       appBar: AppBar(
         title: const Text('Editar Perfil del Paciente'),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: Color(0xFF153866), // Adjusting the AppBar color to match
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: <Widget>[
-            buildTextField('Nombre', nameController),
-            buildTextField('ID', patientIdController),
-            buildTextField('Hospital', hospitalNameController),
-            buildTextField('Historial Clínico', clinicalHistoryController),
-            buildTextField('Motivo de Consulta', consultationReasonController),
-            buildTextField('Diagnóstico', diagnosisController),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _saveAndExit,
-              child: const Text('Guardar Cambios'),
-            ),
-          ],
+        child: Form(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              buildTextField(nameController, 'Nombre'),
+              buildTextField(patientIdController, 'ID'),
+              buildTextField(hospitalNameController, 'Hospital'),
+              buildTextField(clinicalHistoryController, 'Historial Clínico'),
+              buildTextField(consultationReasonController, 'Motivo de Consulta'),
+              buildTextField(diagnosisController, 'Diagnóstico'),
+              SizedBox(height: 30), // Added more spacing before the button
+              ElevatedButton(
+                onPressed: _saveAndExit,
+                child: const Text('Guardar Cambios'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF153866), // Button color
+                  foregroundColor: Colors.white, // Text color
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget buildTextField(String label, TextEditingController controller) {
+  Widget buildTextField(TextEditingController controller, String label) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: TextField(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
+          suffixIcon: Icon(Icons.edit, color: Colors.grey), // Add an edit icon to each field
         ),
       ),
     );
   }
 
   void _saveAndExit() {
-    Navigator.pop(context, {
-      'name': nameController.text,
-      'patientId': patientIdController.text,
-      'hospitalName': hospitalNameController.text,
-      'clinicalHistory': clinicalHistoryController.text,
-      'consultationReason': consultationReasonController.text,
-      'diagnosis': diagnosisController.text,
-    });
+    if (true) { // Simplified for example, check your conditions
+      Navigator.pop(context, {
+        'name': nameController.text,
+        'patientId': patientIdController.text,
+        'hospitalName': hospitalNameController.text,
+        'clinicalHistory': clinicalHistoryController.text,
+        'consultationReason': consultationReasonController.text,
+        'diagnosis': diagnosisController.text,
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Profile updated successfully!'))
+      );
+    }
   }
 
   @override
