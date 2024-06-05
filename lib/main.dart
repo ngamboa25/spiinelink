@@ -58,13 +58,18 @@ class HomeScreenState extends State<HomeScreen> {
   List<Map<String, String>> patientData = [];
   String searchQuery = '';
 
+
   @override
   void initState() {
     super.initState();
     Faker faker = Faker();
-    patientData = List.generate(4, (index) => {
-      'name': faker.person.name(),
-      'id': faker.guid.guid(),
+    patientData = List.generate(4, (index) {
+      String fullGuid = faker.guid.guid();
+      String limitedGuid = fullGuid.substring(0, 10); // Limit ID to 10 characters
+      return {
+        'name': faker.person.name(),
+        'id': limitedGuid,
+      };
     });
   }
 
@@ -86,133 +91,134 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildProfileWidget(BuildContext context) {
-    return Expanded(
-      flex: 3,
-      child: SingleChildScrollView(
-        child: Container(
-          color: Colors.white, // Page background color
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 250,
-                      height: 250,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color(0xFF193A61),
-                          width: 2,
-                        ),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/doc_icon.png', // Change this to your desired image path
-                          fit: BoxFit.cover,
-                        ),
+  return Expanded(
+    flex: 3,
+    child: SingleChildScrollView(
+      child: Container(
+        color: Colors.lightBlue[50], // Page background color
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(60, 60, 60, 60),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 250,
+                    height: 250,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: const Color(0xFF193A61),
+                        width: 2,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.doctorName,
-                      style: const TextStyle(
-                        fontFamily: 'Readex Pro',
-                        fontSize: 30,
-                        letterSpacing: 0,
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/doc_icon.png', // Your image path
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 35, 0, 0),
-                child: buildInfoBox(' ${widget.cedula}'),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    widget.doctorName,
+                    style: const TextStyle(
+                      fontFamily: 'Readex Pro',
+                      fontSize: 30,
+                      letterSpacing: 0,
+                    ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                child: buildInfoBox('${widget.hospital}'),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserProfilePage(),
-                      ),
-                    );
-                    if (result != null) {
-                      setState(() {});
-                    }
-                  },
-                  icon: const Icon(Icons.settings),
-                  label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFDDEDFF),
-                    foregroundColor: const Color(0xFF193A61),
-                    elevation: 3,
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: const BorderSide(
-                        color: Color(0xFF193A61),
-                        width: 1,
-                      ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 35, 0, 0),
+              child: buildInfoBox('${widget.cedula}'),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+              child: buildInfoBox('${widget.hospital}'),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UserProfilePage(),
+                    ),
+                  );
+                  if (result != null) {
+                    setState(() {});
+                  }
+                },
+                icon: const Icon(Icons.settings),
+                label: const Text('Editar Perfil', style: TextStyle(fontSize: 16)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFDDEDFF),
+                  foregroundColor: const Color(0xFF193A61),
+                  elevation: 3,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(
+                      color: Color(0xFF193A61),
+                      width: 1,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginPage()),
-                    );
-                  },
-                  icon: const Icon(Icons.exit_to_app, color: Colors.red),
-                  label: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFFCDD2), // Light red background
-                    foregroundColor: Colors.red,
-                    elevation: 3,
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: const BorderSide(
-                        color: Colors.red,
-                        width: 1,
-                      ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                icon: const Icon(Icons.exit_to_app, color: Colors.red),
+                label: const Text('Cerrar Sesión', style: TextStyle(fontSize: 16, color: Colors.red)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFFCDD2),
+                  foregroundColor: Colors.red,
+                  elevation: 3,
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    side: const BorderSide(
+                      color: Colors.red,
+                      width: 1,
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget buildPatientListSection(BuildContext context) {
     return Expanded(
