@@ -1,71 +1,68 @@
 import 'package:flutter/material.dart';
 
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Calculadora de Tornillos',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: const CalculadoraPag(),
+    );
+  }
+}
+
 class CalculadoraPag extends StatefulWidget {
+  const CalculadoraPag({super.key});
+
   @override
   CalculadoraPagState createState() => CalculadoraPagState();
 }
 
 class CalculadoraPagState extends State<CalculadoraPag> {
-  final TextEditingController _diametroTornilloController = TextEditingController();
   final TextEditingController _diametroCanulaController = TextEditingController();
   final TextEditingController _diametroFenestracionesController = TextEditingController();
-  final TextEditingController _numeroFenestracionesController = TextEditingController();
+  final TextEditingController _distanciaFenestracionesController = TextEditingController();
+  final TextEditingController _cantidadFenestracionesController = TextEditingController();
   String? selectedScrew;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calculadora'),
+        backgroundColor: const Color(0xFFDDEDFF),
+        centerTitle: true,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-            children: <Widget>[
-              const Text('Tamaño vertebral', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              for (var vertebra in ['T12', 'L1', 'L2', 'L3', 'L4', 'L5'])
-                Row(
-                  children: [
-                    Expanded(child: TextField(decoration: InputDecoration(labelText: '$vertebra tamaño'))),
-                    const SizedBox(width: 10),
-                    Expanded(child: TextField(decoration: InputDecoration(labelText: '$vertebra densidad'))),
-                  ],
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.blueGrey[100],
+                  borderRadius: BorderRadius.circular(10),
                 ),
+                child: const Text('Calculadora'),
+              ),
               const SizedBox(height: 20),
-              const Text('Elegir modelo de tornillo', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              DropdownButton<String>(
-                isExpanded: true,
-                value: selectedScrew,
-                onChanged: (value) {
-                  setState(() {
-                    selectedScrew = value;
-                    _updateScrewDetails(value);
-                  });
-                },
-                items: const [
-                   DropdownMenuItem(value: 'Spinelink', child: Text('Tornillo Spinelink')),
-                  // Añadir más modelos según sea necesario
-                ],
-              ),
-              TextField(controller: _diametroTornilloController, decoration: const InputDecoration(labelText: 'Diámetro de tornillo')),
-              TextField(controller: _diametroCanulaController, decoration: const InputDecoration(labelText: 'Diámetro de cánula')),
-              TextField(controller: _diametroFenestracionesController, decoration: const InputDecoration(labelText: 'Diámetro de fenestraciones')),
-              TextField(controller: _numeroFenestracionesController, decoration: const InputDecoration(labelText: 'Número de fenestraciones')),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: TextField(decoration: InputDecoration(labelText: 'MMA'))),
-                  SizedBox(width: 10),
-                  Expanded(child: TextField(decoration: InputDecoration(labelText: 'PMMA'))),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Lógica para calcular
-                },
-                child: const Text('Calcular'),
-              ),
+              _buildTable(),
+              const SizedBox(height: 20),
+              _buildDropDown(),
+              _buildScrewDetailRows(),
+              const SizedBox(height: 20),
+              _buildCalculateButton(),
             ],
           ),
         ),
@@ -73,19 +70,135 @@ class CalculadoraPagState extends State<CalculadoraPag> {
     );
   }
 
+  Table _buildTable() {
+    return Table(
+      columnWidths: const {
+        0: FlexColumnWidth(1),
+        1: FlexColumnWidth(1),
+        2: FlexColumnWidth(1),
+        3: FlexColumnWidth(1),
+        4: FixedColumnWidth(40), // Checkbox column width
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        TableRow(
+          children: [
+            for (var title in ['Tamaño Vertebral', 'Densidad Ósea', 'Porosidad', 'Permeabilidad', ''])
+              Container(
+                padding: const EdgeInsets.all(8),
+                child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+              ),
+          ],
+        ),
+        for (var vertebra in ['T12', 'L1', 'L2', 'L3', 'L4', 'L5'])
+          TableRow(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                child: Text(vertebra, textAlign: TextAlign.center),
+              ),
+              for (var _ in [1, 2, 3]) // Three input fields per vertebra
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: 70, // Further reduced width for the input fields
+                    child: TextField(
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ),
+                ),
+              Checkbox(
+                value: false,
+                onChanged: (bool? value) {},
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+
+  DropdownButtonFormField<String> _buildDropDown() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      isExpanded: true,
+      hint: const Text('Elegir Modelo de Tornillo'),
+      value: selectedScrew,
+      onChanged: (value) {
+        setState(() {
+          selectedScrew = value;
+          _updateScrewDetails(value);
+        });
+      },
+      items: const [
+        DropdownMenuItem(value: 'Spinelink', child: Text('Tornillo Spinelink')),
+        DropdownMenuItem(value: 'AddNew', child: Text('Añadir modelo nuevo')),
+      ],
+    );
+  }
+
+  Widget _buildScrewDetailRows() {
+    List<List<dynamic>> details = [
+      ['Diámetro de Cánula', _diametroCanulaController],
+      ['Diámetro de Fenestraciones', _diametroFenestracionesController],
+      ['Distancia entre Fenestraciones', _distanciaFenestracionesController],
+      ['Cantidad de Fenestraciones', _cantidadFenestracionesController]
+    ];
+
+    return Column(
+      children: details.map((detail) {
+        return Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Text(detail[0]),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: TextField(
+                controller: detail[1],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  ElevatedButton _buildCalculateButton() {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFFDDEDFF),
+        foregroundColor: Color(0xFF193A61),
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+      ),
+      child: const Text('CALCULAR'),
+    );
+  }
+
   void _updateScrewDetails(String? model) {
-    // Supongamos que estos son los detalles para el modelo "Spinelink"
     if (model == 'Spinelink') {
-      _diametroTornilloController.text = '5 mm';
-      _diametroCanulaController.text = '3 mm';
-      _diametroFenestracionesController.text = '1 mm';
-      _numeroFenestracionesController.text = '4';
+      _diametroCanulaController.text = '1.6 mm';
+      _diametroFenestracionesController.text = '1.6 mm';
+      _distanciaFenestracionesController.text = '3.3 mm';
+      _cantidadFenestracionesController.text = '6';
     } else {
-      // Limpiar los campos si se selecciona otro modelo o ninguno
-      _diametroTornilloController.clear();
       _diametroCanulaController.clear();
       _diametroFenestracionesController.clear();
-      _numeroFenestracionesController.clear();
+      _distanciaFenestracionesController.clear();
+      _cantidadFenestracionesController.clear();
     }
   }
 }
