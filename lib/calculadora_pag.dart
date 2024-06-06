@@ -180,8 +180,8 @@ class CalculadoraPagState extends State<CalculadoraPag> {
     return ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFFDDEDFF),
-        foregroundColor: Color(0xFF193A61),
+        backgroundColor: const Color(0xFFDDEDFF),
+        foregroundColor: const Color(0xFF193A61),
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
       ),
       child: const Text('CALCULAR'),
