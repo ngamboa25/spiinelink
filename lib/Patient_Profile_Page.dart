@@ -35,75 +35,119 @@ class PatientProfilePageState extends State<PatientProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(name),
-        backgroundColor: Colors.blue[300],
+        backgroundColor: const Color(0xFFDDEDFF),
+        centerTitle: true,
+        elevation: 0,
       ),
-      body: Row(
-        children: [
-          buildPatientDetails(),
-          Expanded(
-            child: buildMedicalInformation(),
-          ),
-        ],
-      ),
+      body: buildProfileWidget(context),
     );
   }
 
-  Widget buildPatientDetails() {
-    return Container(
-      width: 200,
-      padding: const EdgeInsets.all(10),
-      color: Colors.lightBlue[50],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(radius: 50, backgroundImage: AssetImage('assets/patient_icon.png')),
-          const SizedBox(height: 20),
-          Text('Nombre: $name', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-          Text('ID: $patientId', style: const TextStyle(fontSize: 16)),
-          Text('Hospital: $hospitalName', style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 20),
-          ElevatedButton(onPressed: () => navigateToEditProfile(context), child: const Text('Editar Perfil')),
-          ElevatedButton(onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => CalculadoraPag()));
-          }, child: const Text('Calculadora')),
-        ],
-      ),
-    );
-  }
-
-  Widget buildMedicalInformation() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildTextField('Historial Clínico', clinicalHistory, (value) => clinicalHistory = value),
-              const SizedBox(height: 10),
-              buildTextField('Motivo de Consulta', consultationReason, (value) => consultationReason = value),
-              const SizedBox(height: 10),
-              buildTextField('Diagnóstico', diagnosis, (value) => diagnosis = value),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => navigateToImageAnalysis(context),
-                child: const Text('Análisis de Imágenes'),
+  Widget buildProfileWidget(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(60),
+              child: Container(
+                width: 250,
+                height: 250,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFF193A61),
+                    width: 2,
+                  ),
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/image.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+            Text(
+              'Nombre: $name',
+              style: const TextStyle(
+                fontSize: 30,
+              ),
+            ),
+            const SizedBox(height: 20),
+            buildInfoBox('ID: $patientId'),
+            buildInfoBox('Hospital: $hospitalName'),
+            buildTextField('Historial Clínico', clinicalHistory, (value) => setState(() => clinicalHistory = value)),
+            buildTextField('Motivo de Consulta', consultationReason, (value) => setState(() => consultationReason = value)),
+            buildTextField('Diagnóstico', diagnosis, (value) => setState(() => diagnosis = value)),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => navigateToImageAnalysis(context),
+              child: const Text('Análisis de Imágenes'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFDDEDFF),
+                foregroundColor: const Color(0xFF193A61),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                textStyle: const TextStyle(fontSize: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: const BorderSide(color: Color(0xFF193A61), width: 1),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CalculadoraPag()));
+              },
+              child: const Text('Calculadora'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFDDEDFF),
+                foregroundColor: const Color(0xFF193A61),
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                textStyle: const TextStyle(fontSize: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: const BorderSide(color: Color(0xFF193A61), width: 1),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget buildTextField(String label, String value, Function(String) onChange) {
-    return TextField(
-      controller: TextEditingController(text: value),
-      decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
-      onChanged: onChange,
-      maxLines: 3,
+  Widget buildTextField(String label, String initialValue, Function(String) onChange) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: TextField(
+        controller: TextEditingController(text: initialValue),
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+        ),
+        onChanged: onChange,
+      ),
+    );
+  }
+
+  Widget buildInfoBox(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: const Color(0xFF193A61), width: 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(text, style: const TextStyle(fontSize: 18)),
     );
   }
 
@@ -112,8 +156,7 @@ class PatientProfilePageState extends State<PatientProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) => PatientProfileEdit(
-          name: name, patientId: patientId, hospitalName: hospitalName,
-          clinicalHistory: clinicalHistory, consultationReason: consultationReason, diagnosis: diagnosis
+          name: name, patientId: patientId, hospitalName: hospitalName, clinicalHistory: clinicalHistory, consultationReason: consultationReason, diagnosis: diagnosis
         )
       )
     );
@@ -123,26 +166,23 @@ class PatientProfilePageState extends State<PatientProfilePage> {
         name = result['name'];
         patientId = result['patientId'];
         hospitalName = result['hospitalName'];
-        clinicalHistory = result['clinicalHistory'];
-        consultationReason = result['consultationReason'];
-        diagnosis = result['diagnosis'];
       });
     }
   }
 
-void navigateToImageAnalysis(BuildContext context) async {
-  final result = await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ImageAnalysisPage(imageNotes1: imageNotes1, imageNotes2: imageNotes2)
-    )
-  );
+  void navigateToImageAnalysis(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageAnalysisPage(imageNotes1: imageNotes1, imageNotes2: imageNotes2)
+      )
+    );
 
-  if (result != null) {
-    setState(() {
-      imageNotes1 = result['imageNotes1'] ?? imageNotes1;
-      imageNotes2 = result['imageNotes2'] ?? imageNotes2;
-    });
+    if (result != null) {
+      setState(() {
+        imageNotes1 = result['imageNotes1'] ?? imageNotes1;
+        imageNotes2 = result['imageNotes2'] ?? imageNotes2;
+      });
+    }
   }
-}
 }
