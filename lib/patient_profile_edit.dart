@@ -47,14 +47,14 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
       backgroundColor: Colors.white, // Background color
       appBar: AppBar(
         title: const Text('Editar Perfil del Paciente'),
-        backgroundColor: Color(0xFF153866), // Adjusting the AppBar color to match
+        backgroundColor: const Color(0xFF153866), // Adjusting the AppBar color to match
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               buildTextField(nameController, 'Nombre'),
@@ -63,12 +63,12 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
               buildTextField(clinicalHistoryController, 'Historial Clínico'),
               buildTextField(consultationReasonController, 'Motivo de Consulta'),
               buildTextField(diagnosisController, 'Diagnóstico'),
-              SizedBox(height: 30), // Added more spacing before the button
+              const SizedBox(height: 30), // Added more spacing before the button
               ElevatedButton(
                 onPressed: _saveAndExit,
                 child: const Text('Guardar Cambios'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF153866), // Button color
+                  backgroundColor: const Color(0xFF153866), // Button color
                   foregroundColor: Colors.white, // Text color
                 ),
               ),
@@ -87,7 +87,7 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
-          suffixIcon: Icon(Icons.edit, color: Colors.grey), // Add an edit icon to each field
+          suffixIcon: const Icon(Icons.edit, color: Colors.grey), // Add an edit icon to each field
         ),
       ),
     );
@@ -104,7 +104,7 @@ class PatientProfileEditState extends State<PatientProfileEdit> {
         'diagnosis': diagnosisController.text,
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully!'))
+        const SnackBar(content: Text('Profile updated successfully!'))
       );
     }
   }
